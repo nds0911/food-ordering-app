@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Available Dishes</h2>
+<ul>
+    {% for dish in dishes %}
+    <li>
+        <strong>{{ dish.name }}</strong> from {{ dish.restaurant }}
+        <a href="{{ url_for('main.place_order', dish_id=dish.id) }}">Order Now</a>
+        <ul>
+            {% for order in dish.orders %}
+            <li>{{ order.order_note }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

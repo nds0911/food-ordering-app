@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: review-service
+  template:
+    metadata:
+      labels:
+        app: review-service
+    spec:
+      containers:
+      - name: review-service
+        image: anjalimishra26/review_service:updated
+        ports:
+        - containerPort: 5002
+        env:
+        - name: FLASK_APP
+          value: "app.py"

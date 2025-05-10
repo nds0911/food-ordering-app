@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Delivery System</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Food Delivery System</h1>
+    <nav>
+        <a href="#" onclick="showAddDishForm()">Add Dish</a>
+    </nav>
+</header>
+<main>
+    <div id="content"></div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchDishes();
+    });
+
+    function fetchDishes() {
+        fetch('http://localhost:30001/dishes')
+            .then(response => response.json())
+            .then(data => {
+                const content = document.getElementById('content');
+                content.innerHTML = '<h2>All Dishes</h2><ul>' + data.map(dish =>
+                    `<li>
+                            <strong>${dish.name}</strong> from ${dish.restaurant}
+                            <button onclick="showPlaceOrderForm(${dish.id})">Place Order</button>
+                            <ul id="orders-${dish.id}"></ul>
+                        </li>`).join('') + '</ul>';
+                data.forEach(dish => fetchOrders(dish.id));
+            });
+    }
+
+    function fetchOrders(dishId) {
+        fetch('http://localhost:30002/orders')
+            .then(response => response.json())
+            .then(data => {
+                const orders = data.filter(order => order.dish_id == dishId);
+                const ordersList = document.getElementById(`orders-${dishId}`);
+                ordersList.innerHTML = orders.map(order => `<li>${order.order_note}</li>`).join('');
+            });
+    }
+
+    function showAddDishForm() {
+        const content = document.getElementById('content');
+        content.innerHTML = `
+                <h2>Add a New Dish</h2>
+                <form onsubmit="addDish(event)">
+                    <label for="name">Dish Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="restaurant">Restaurant:</label>
+                    <input type="text" id="restaurant" name="restaurant" required>
+                    <button type="submit">Add Dish</button>
+                </form>
+            `;
+    }
+
+    function addDish(event) {
+        event.preventDefault();
+        const name = event.target.name.value;
+        const restaurant = event.target.restaurant.value;
+        fetch('http://localhost:30001/dishes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, restaurant })
+        }).then(() => {
+            fetchDishes();
+        });
+    }
+
+    function showPlaceOrderForm(dishId) {
+        const content = document.getElementById('content');
+        content.innerHTML = `
+                <h2>Place an Order</h2>
+                <form onsubmit="placeOrder(event, ${dishId})">
+                    <textarea name="order_note" required></textarea>
+                    <button type="submit">Place Order</button>
+                </form>
+            `;
+    }
+
+    function placeOrder(event, dishId) {
+        event.preventDefault();
+        const order_note = event.target.order_note.value;
+        fetch('http://localhost:30002/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ dish_id: dishId, order_note })
+        }).then(() => {
+            fetchDishes();
+        });
+    }
+</script>
+</body>
+</html>
