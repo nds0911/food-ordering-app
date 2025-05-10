@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: review-service
+  name: order-service
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: review-service
+      app: order-service
   template:
     metadata:
       labels:
-        app: review-service
+        app: order-service
     spec:
       containers:
-      - name: review-service
-        image: anjalimishra26/review_service:updated
+      - name: order-service
+        image: scalableservice/order_service:updated
         ports:
         - containerPort: 5002
         env:

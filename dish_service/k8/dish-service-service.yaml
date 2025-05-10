@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: book-service
+  name: dish-service
 spec:
   selector:
-    app: book-service
+    app: dish-service
   ports:
     - protocol: TCP
       port: 80

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-service
+  name: dish-service
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: book-service
+      app: dish-service
   template:
     metadata:
       labels:
-        app: book-service
+        app: dish-service
     spec:
       containers:
-      - name: book-service
-        image: anjalimishra26/book_service:latest
+      - name: dish-service
+        image: anjalimishra26/dish_service:latest
         ports:
         - containerPort: 5001
         env:
