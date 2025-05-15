@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: dish-service
-        image: anjalimishra26/dish_service:latest
+        image: scalableservice/dish_service:latest
         ports:
         - containerPort: 5001
         env:

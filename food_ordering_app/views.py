@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models import db, Dish, Order
+from models import db, Dish, Order_new
 
 main = Blueprint('main', __name__)
 
@@ -24,7 +24,7 @@ def place_order(dish_id):
     dish = Dish.query.get_or_404(dish_id)
     if request.method == 'POST':
         order_note = request.form['order_note']
-        new_order = Order(order_note=order_note, dish=dish)
+        new_order = Order_new(order_note=order_note, dish=dish)
         db.session.add(new_order)
         db.session.commit()
         return redirect(url_for('main.index'))
